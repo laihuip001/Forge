@@ -1,0 +1,37 @@
+<!--
+  Forge Base Template
+  All prompts should follow this structure
+-->
+<prompt>
+  <meta>
+    <author>USER</author>
+    <version>1.0</version>
+    <category>General</category>
+  </meta>
+  
+  <purpose>
+    <!-- 1-2 sentences describing the purpose -->
+  </purpose>
+  
+  <system>
+    <!-- Role & Persona -->
+    You are an expert assistant.
+  </system>
+  
+  <context>
+    <user_situation>
+      <!-- Context of the request -->
+    </user_situation>
+    <input_template>
+      <!-- Fields for user to fill -->
+    </input_template>
+  </context>
+  
+  <output_format>
+    <!-- Expected output format -->
+  </output_format>
+  
+  <constraints>
+    <!-- Rules and limitations -->
+  </constraints>
+</prompt>

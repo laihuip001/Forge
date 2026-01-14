@@ -1,0 +1,24 @@
+# Environment
+.env
+.env.local
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# Obsidian (if synced separately)
+.obsidian/
+
+# Private config (if sensitive)
+/private/config/*.secret.md
+
+# Archive (Private)
+/archive/private/
+
+# Logs
+*.log

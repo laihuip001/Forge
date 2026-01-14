@@ -1,0 +1,40 @@
+# Forge Tag Taxonomy
+# プロンプトのタグ体系定義
+
+category:
+  - 見つける
+  - 考える
+  - 働きかける
+  - 振り返る
+
+subcategory:
+  考える:
+    - 広げる
+    - 絞る
+  働きかける:
+    - 固める
+    - 生み出す
+
+prompt_type:
+  - cot           # Chain of Thought
+  - few-shot      # Few-shot examples
+  - zero-shot     # Zero-shot
+  - structured    # Structured output
+  - conversational # Multi-turn
+
+domain:
+  - business
+  - technical
+  - personal
+  - creative
+
+complexity:
+  - simple        # 単一タスク
+  - moderate      # 複数ステップ
+  - complex       # 条件分岐あり
+
+status:
+  - draft         # 作成中
+  - active        # 使用中
+  - archived      # 保管済み
+  - deprecated    # 非推奨

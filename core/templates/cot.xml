@@ -1,0 +1,45 @@
+<!--
+  Forge CoT (Chain of Thought) Template
+  For complex reasoning tasks
+-->
+<prompt>
+  <meta>
+    <author>USER</author>
+    <version>1.0</version>
+    <category>CoT</category>
+  </meta>
+
+  <purpose>
+    <!-- 1-2 sentences describing the purpose -->
+  </purpose>
+  
+  <system>
+    <!-- Role & Persona -->
+    You are an expert assistant. You must think step by step before providing your answer.
+  </system>
+  
+  <context>
+    <user_situation>
+      <!-- Context of the request -->
+    </user_situation>
+    <input_template>
+      <!-- Fields for user to fill -->
+    </input_template>
+  </context>
+  
+  <thinking_process>
+    <step n="1"><!-- Define the problem --></step>
+    <step n="2"><!-- Analyze key factors --></step>
+    <step n="3"><!-- Propose solutions --></step>
+    <!-- Add steps as needed -->
+  </thinking_process>
+  
+  <output_format>
+    <!-- Expected output format -->
+  </output_format>
+  
+  <constraints>
+    <constraint>思考過程を省略しない</constraint>
+    <constraint>結論を先に述べない</constraint>
+  </constraints>
+</prompt>
