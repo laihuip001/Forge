@@ -1,10 +1,73 @@
 # Forge
 
-> Prompt Engineering IDE powered by Antigravity
+> **Prompt Engineering IDE powered by Antigravity**
+> Version: 1.0 | Military-Grade System Prompt Development Platform
+
+---
 
 ## Overview
 
 Forgeは、構造化されたプロンプトの設計・最適化・アーカイブを行う専用環境です。
+
+**特徴:**
+
+- 🎯 **軍事級品質** - トークン度外視、決定論的ルーティング、多層防御
+- 🔧 **モジュール構成** - M0-M5の階層化されたシステムプロンプト
+- 📋 **SDLCワークフロー** - 要件定義から保守までの体系的開発フロー
+- ⌨️ **Hotkey駆動** - Essential 5個 + Extended 8個のコマンド
+
+---
+
+## Quick Start
+
+```bash
+# Clone
+git clone https://github.com/laihuip001/Forge.git
+
+# Open in Antigravity IDE
+# Start with [Plan] to begin prompt development
+```
+
+---
+
+## Module Architecture
+
+| Tier | Module | 責務 |
+|:----:|--------|------|
+| L0 | M1_KERNEL | 不可侵ルール、ペルソナ、4原則 |
+| L1 | M0_USER_PROFILE | ユーザープロファイル（カスタマイズ） |
+| L2 | M2_PE_ENGINE | 50+プロンプト技術、XML Semantics |
+| L3 | M3_FLOW | Phase Pipeline、Engine Registry |
+| L3 | M4_VOICE | 出力スタイル、Noise Filter |
+| U1 | M5_INTERFACE | Hotkeys、Boot Sequence |
+
+---
+
+## Essential Hotkeys
+
+| Key | 機能 |
+|:---:|------|
+| `[Plan]` | 計画モード |
+| `[Act]` | 実行モード |
+| `[F]` | 最終出力（コピペ可能） |
+| `[!]` | 強制実行（ダッシュボード省略） |
+| `[Audit]` | 監査モード |
+
+詳細: [HOTKEY_CHEATSHEET.md](core/HOTKEY_CHEATSHEET.md)
+
+---
+
+## Directory Structure
+
+| Directory | Purpose |
+|-----------|---------|
+| `/core/modules/system/` | システムモジュール (M1-M5) |
+| `/core/DESIGN_PRINCIPLES.md` | 設計原則 |
+| `/library/` | プロンプトライブラリ |
+| `/.agent/workflows/` | ワークフロー定義 |
+| `/archive/` | アーカイブ |
+
+---
 
 ## Philosophy
 
@@ -15,31 +78,15 @@ Forgeは、構造化されたプロンプトの設計・最適化・アーカイ
  起点      広げる/絞る   固める/生み出す   評価
 ```
 
-## Directory Structure
+---
 
-| Directory | Purpose |
-|-----------|---------|
-| `/library/🔎 見つける/` | 起点：種を見つける |
-| `/library/🧠 考える/📊 広げる/` | 発散：選択肢を増やす |
-| `/library/🧠 考える/🎯 絞る/` | 収束：選択肢を減らす |
-| `/library/⚡ 働きかける/🔧 固める/` | 準備：足場を固める |
-| `/library/⚡ 働きかける/✨ 生み出す/` | 創造：価値を生み出す |
-| `/library/🔄 振り返る/` | 評価：学びを得る |
+## Documentation
 
-## Commands
+- [GEMINI.md](GEMINI.md) - Forge憲法
+- [DESIGN_PRINCIPLES.md](core/DESIGN_PRINCIPLES.md) - 設計原則
+- [prompt-development.md](.agent/workflows/prompt-development.md) - 開発ワークフロー
 
-| Command | Description |
-|---------|-------------|
-| `/archive` | プロンプトをライブラリに保存 |
-| `/audit` | プロンプトの品質監査 |
-| `/optimize` | プロンプトの最適化 |
-
-## Setup
-
-1. Clone this repository
-2. Copy `.env.example` to `.env` and configure
-3. Open in Antigravity IDE
-4. Start designing prompts
+---
 
 ## Repository
 
