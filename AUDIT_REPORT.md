@@ -20,30 +20,8 @@
 
 ## 🔓 セキュリティ脆弱性
 
-### 1. Webサーバー: ディレクトリトラバーサル攻撃に脆弱 【高】
-
-**問題箇所**: `start-server.ps1` Line 59
-
-```powershell
-$FilePath = Join-Path $Root $UrlPath.Replace('/', '\')
-```
-
-**攻撃シナリオ**:
-```
-GET /../../../Windows/System32/config/SAM HTTP/1.1
-```
-
-**現状**: `Join-Path`は`..\`を正規化しますが、エンコードされたパス（`%2e%2e%2f`）や特殊なパターンで回避される可能性があります。
-
-**改善案**:
-```powershell
-$NormalizedPath = [System.IO.Path]::GetFullPath($FilePath)
-if (-not $NormalizedPath.StartsWith($Root)) {
-    # 拒否
-}
-```
-
----
+### 1. Webサーバー: ディレクトリトラバーサル攻撃 【解決済】
+> **Status**: Fixed by Removal (Feature Deprecated)
 
 ### 2. CLI: 入力検証が不完全 【中】
 
@@ -63,32 +41,8 @@ if ($UserInput -match '[<>|&;`$]') { ... }
 
 ---
 
-### 3. Web UI: XSS脆弱性 【中】
-
-**問題箇所**: `web/index.html` Line 444-447
-
-```javascript
-return `
-    <div class="module-card" data-id="${m.id}">
-        <h3>${m.name}</h3>
-        <p class="description">${m.description || '説明なし'}</p>
-    </div>
-`;
-```
-
-**攻撃シナリオ**:
-モジュールのファイル名や説明文に`<script>`タグを含めると、そのまま実行される。
-
-**改善案**:
-```javascript
-function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-}
-```
-
----
+### 3. Web UI: XSS脆弱性 【解決済】
+> **Status**: Fixed by Removal (Feature Deprecated)
 
 ### 4. クリップボード操作が無条件 【低】
 
@@ -124,28 +78,8 @@ $json = Get-Content $Script:IndexFile -Raw -Encoding UTF8 | ConvertFrom-Json
 
 ---
 
-### 2. Web UI: クライアントサイドフィルタリングの限界 【中】
-
-**問題箇所**: `web/index.html` Line 424-433
-
-```javascript
-const filtered = indexData.modules.filter(m => { ... });
-```
-
-**問題点**:
-- 120モジュールは問題ないが、1000+になると遅延が発生
-- 毎キー入力でフィルタリング実行（デバウンスなし）
-
-**改善案**:
-```javascript
-let debounceTimer;
-searchInput.addEventListener('input', () => {
-    clearTimeout(debounceTimer);
-    debounceTimer = setTimeout(renderModules, 300);
-});
-```
-
----
+### 2. Web UI: クライアントサイドフィルタリングの限界 【解決済】
+> **Status**: Fixed by Removal (Feature Deprecated)
 
 ### 3. テストスクリプトの非並列実行 【低】
 
@@ -163,21 +97,8 @@ searchInput.addEventListener('input', () => {
 
 英語ユーザーへの対応なし。国際化 (i18n) の仕組みがない。
 
-### 2. サーバー終了時のクリーンアップなし 【低】
-
-**問題箇所**: `start-server.ps1`
-
-Ctrl+Cで終了した際、`$Listener.Stop()` が呼ばれない可能性がある。
-
-**改善案**:
-```powershell
-try {
-    # メインループ
-} finally {
-    $Listener.Stop()
-    Write-Host "サーバーを停止しました"
-}
-```
+### 2. サーバー終了時のクリーンアップなし 【解決済】
+> **Status**: Fixed by Removal (Feature Deprecated)
 
 ### 3. 検索結果のハイライトなし 【低】
 

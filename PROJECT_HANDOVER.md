@@ -10,7 +10,7 @@
 以下の機能実装が完了し、動作確認済みです。
 
 1.  **CLI (`forge.ps1`)**: モジュール検索、表示、プリセット生成 (`preset custom`)、インタラクティブモード。
-2.  **Web UI**: `start-server.ps1` で起動し、ローカルブラウザからモジュールを閲覧・コピー可能。セキュリティ修正済み。
+2.  **Web UI**: 廃止済み (Obsidian連携へ移行)。
 3.  **データ構造**: `build-index.ps1` により `index.json` を生成し、全ツールで共有（Single Source of Truth）。
 4.  **ドキュメント**: `USER_MANUAL.md` (取扱説明書), `AUDIT_REPORT.md` (監査レポート)。
 
@@ -31,8 +31,8 @@
 
 ### 2. 保留中の判断
 
-*   **Web UI の存廃**: 外部アクセス機能なども含め、Obsidian/GitHub エコシステムの中でこの機能がオーバーエンジニアリングになっていないか判断が必要です。
-*   **Android アクセス**: Web UI 経由で行うか、GitHub Mobile/Obsidian Sync で行うかの方針決定。
+*   **(Resolved) Web UI の存廃**: Web UIは廃止され、Obsidian連携へ一本化されました。
+*   **Android アクセス**: GitHub Mobile/Obsidian Sync で行う方針に決定。
 
 ---
 

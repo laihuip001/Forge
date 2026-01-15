@@ -25,16 +25,21 @@ Forgeは、LLM（大規模言語モデル）を**構造化された思考フレ�
 
 ### 基本的な使い方
 
-1. **システムプロンプトに設定**  
+1. **ObsidianでVaultとして開く**  
+   `Forge/` フォルダをObsidianのVaultとして開きます
+
+2. **システムプロンプトに設定**  
    `The Cognitive Hypervisor Architecture.md` をAIのシステムプロンプトとして設定
 
-2. **モジュールを呼び出す**  
-   自然言語またはコマンド形式でモジュールを起動
-   ```
-   /考える/絞る/決断を下す
+3. **CLIツールを使用**  
+   PowerShellでモジュールを検索・表示:
+   ```powershell
+   .\forge.ps1 list          # モジュール一覧
+   .\forge.ps1 search "TDD"  # キーワード検索
+   .\forge.ps1 preset architect  # プリセットをクリップボードにコピー
    ```
 
-3. **AIが自動でルーティング**  
+4. **AIが自動でルーティング**  
    課題を伝えると、最適なモジュールを提案
 
 ### 動作モード
@@ -159,9 +164,9 @@ Forge/
 - [x] 思考モジュール（44個）
 - [x] プロトコルモジュール（25個）
 - [x] Prompt Engineeringライブラリ
-- [ ] CLI ツール
-- [ ] Web インターフェース
-- [ ] Google AI Studio 統合
+- [x] CLI ツール (`forge.ps1`)
+- [x] Obsidian連携（Vault対応）
+- [ ] Google AI Studio 統合強化
 
 ---
 

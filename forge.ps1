@@ -255,8 +255,7 @@ function Start-Interactive {
   
   index               インデックスを再構築
   
-  server              ローカルサーバーを起動
-  
+
   help                このヘルプを表示
 
 例:
@@ -404,7 +403,19 @@ function Copy-Preset {
 }
 
 # ========================================
-# メイン処理
+function Show-Help {
+    Write-Host "`n🔥 Forge CLI Usage`n" -ForegroundColor Cyan
+    Write-Host "  .\forge.ps1 start              # Start interactive mode"
+    Write-Host "  .\forge.ps1 list [category]    # List modules"
+    Write-Host "  .\forge.ps1 load <name>        # View module content"
+    Write-Host "  .\forge.ps1 search <keyword>   # Search modules"
+    Write-Host "  .\forge.ps1 preset <name>      # Generate system prompt"
+    Write-Host "  .\forge.ps1 tree               # Show directory structure"
+    Write-Host "  .\forge.ps1 index              # Rebuild index"
+    Write-Host "  .\forge.ps1 help               # Show this help"
+    Write-Host ""
+}
+
 # ========================================
 switch ($Command.ToLower()) {
     "start" { Start-Interactive }
@@ -449,8 +460,7 @@ switch ($Command.ToLower()) {
     "index" { 
         Update-Index
     }
-    "server" {
-        & "$Script:BaseDir\start-server.ps1"
-    }
+
+    "help" { Show-Help }
     default { Show-Help }
 }
