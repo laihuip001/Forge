@@ -1,4 +1,4 @@
-# Forge CLI 使用ガイド
+﻿# Forge CLI 使用ガイド
 
 ## クイックスタート
 
@@ -54,8 +54,8 @@ cd c:\Users\user\.gemini\Forge
 | `find` | 🔎 見つける - 情報収集・探索 |
 | `expand` | 🧠📊 考える/広げる - 発散思考 |
 | `focus` | 🧠🎯 考える/絞る - 収束思考 |
-| `prepare` | ⚡🔧 働きかける/固める - 準備 |
-| `create` | ⚡✨ 働きかける/生み出す - 創造 |
+| `prepare` | ⚡🔧 動く/固める - 準備 |
+| `create` | ⚡✨ 動く/生み出す - 創造 |
 | `reflect` | 🔄 振り返る - 評価・改善 |
 | `protocols` | 🛡️ プロトコル - 品質管理 |
 | `knowledge` | 📚 知識ベース - 参考資料 |
