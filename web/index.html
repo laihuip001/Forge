@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -32,7 +33,7 @@
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             padding: 2rem;
         }
@@ -50,7 +51,6 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            margin-bottom: 0.5rem;
         }
 
         header p {
@@ -58,175 +58,12 @@
             font-size: 1.1rem;
         }
 
-        .search-box {
-            position: relative;
-            max-width: 600px;
-            margin: 0 auto 2rem;
-        }
-
-        .search-box input {
-            width: 100%;
-            padding: 1rem 1.5rem;
-            font-size: 1.1rem;
+        .notice {
             background: var(--bg-secondary);
-            border: 2px solid var(--border);
-            border-radius: 12px;
-            color: var(--text-primary);
-            transition: all 0.3s;
-        }
-
-        .search-box input:focus {
-            outline: none;
-            border-color: var(--accent);
-            box-shadow: 0 0 0 4px rgba(88, 166, 255, 0.2);
-        }
-
-        .search-box input::placeholder {
-            color: var(--text-secondary);
-        }
-
-        .categories {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            justify-content: center;
+            border-left: 4px solid var(--warning);
+            padding: 1rem;
             margin-bottom: 2rem;
-        }
-
-        .category-btn {
-            padding: 0.5rem 1rem;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            color: var(--text-secondary);
-            cursor: pointer;
-            transition: all 0.2s;
-            font-size: 0.9rem;
-        }
-
-        .category-btn:hover, .category-btn.active {
-            background: var(--accent);
-            color: white;
-            border-color: var(--accent);
-        }
-
-        .modules-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 1rem;
-        }
-
-        .module-card {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 1.5rem;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .module-card:hover {
-            border-color: var(--accent);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-        }
-
-        .module-card h3 {
-            font-size: 1.1rem;
-            margin-bottom: 0.5rem;
-            color: var(--text-primary);
-        }
-
-        .module-card .category {
-            font-size: 0.8rem;
-            color: var(--accent);
-            margin-bottom: 0.5rem;
-        }
-
-        .module-card .description {
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-            line-height: 1.5;
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-            padding: 2rem;
-        }
-
-        .modal.active {
-            display: flex;
-        }
-
-        .modal-content {
-            background: var(--bg-secondary);
-            border-radius: 16px;
-            max-width: 800px;
-            width: 100%;
-            max-height: 80vh;
-            overflow-y: auto;
-            padding: 2rem;
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 1.5rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .modal-header h2 {
-            font-size: 1.5rem;
-        }
-
-        .modal-close {
-            background: none;
-            border: none;
-            color: var(--text-secondary);
-            font-size: 1.5rem;
-            cursor: pointer;
-            padding: 0.5rem;
-        }
-
-        .modal-close:hover {
-            color: var(--text-primary);
-        }
-
-        .modal-body {
-            line-height: 1.8;
-            white-space: pre-wrap;
-            font-family: 'Consolas', 'Monaco', monospace;
-            font-size: 0.9rem;
-        }
-
-        .copy-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.75rem 1.5rem;
-            background: var(--accent);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: all 0.2s;
-            margin-top: 1rem;
-        }
-
-        .copy-btn:hover {
-            background: var(--accent-hover);
+            border-radius: 0 8px 8px 0;
         }
 
         .stats {
@@ -254,38 +91,240 @@
             font-size: 0.9rem;
         }
 
+        .search-box {
+            position: relative;
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            font-size: 1.1rem;
+            background: var(--bg-secondary);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            color: var(--text-primary);
+            transition: all 0.3s;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px rgba(88, 166, 255, 0.2);
+        }
+
+        .categories {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+
+        .category-btn {
+            padding: 0.5rem 1rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .category-btn:hover,
+        .category-btn.active {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+
+        .modules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1rem;
+        }
+
+        .module-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .module-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .module-card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .module-card .category {
+            font-size: 0.8rem;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+
+        .module-card .description {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .module-card .meta {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+            opacity: 0.7;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            max-width: 900px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            padding: 2rem;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .modal-header h2 {
+            font-size: 1.5rem;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .modal-body {
+            line-height: 1.8;
+            white-space: pre-wrap;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.85rem;
+            background: var(--bg-primary);
+            padding: 1rem;
+            border-radius: 8px;
+            max-height: 50vh;
+            overflow-y: auto;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-hover);
+        }
+
+        .btn-secondary {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--border);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 4rem;
+            color: var(--text-secondary);
+        }
+
         @media (max-width: 768px) {
             .container {
                 padding: 1rem;
             }
+
             header h1 {
                 font-size: 1.8rem;
             }
+
             .modules-grid {
                 grid-template-columns: 1fr;
             }
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <header>
-            <h1>🔥 Forge</h1>
+            <h1>🔥 Forge v2.0</h1>
             <p>認知ハイパーバイザー・プロンプトシステム</p>
         </header>
 
+        <div class="notice" id="notice">
+            ⚠️ <strong>ローカルファイル読み込み</strong>: index.jsonから120モジュールを読み込んでいます...
+        </div>
+
         <div class="stats">
             <div class="stat">
-                <div class="stat-value" id="stat-modules">0</div>
+                <div class="stat-value" id="stat-modules">-</div>
                 <div class="stat-label">モジュール</div>
             </div>
             <div class="stat">
-                <div class="stat-value" id="stat-categories">9</div>
+                <div class="stat-value" id="stat-categories">-</div>
                 <div class="stat-label">カテゴリ</div>
             </div>
             <div class="stat">
-                <div class="stat-value" id="stat-presets">6</div>
-                <div class="stat-label">プリセット</div>
+                <div class="stat-value" id="stat-phases">-</div>
+                <div class="stat-label">フェーズ</div>
             </div>
         </div>
 
@@ -293,19 +332,10 @@
             <input type="text" id="search" placeholder="🔍 モジュールを検索... (例: TDD, 決断, リスク)">
         </div>
 
-        <div class="categories" id="categories">
-            <button class="category-btn active" data-category="all">すべて</button>
-            <button class="category-btn" data-category="find">🔎 見つける</button>
-            <button class="category-btn" data-category="expand">📊 広げる</button>
-            <button class="category-btn" data-category="focus">🎯 絞る</button>
-            <button class="category-btn" data-category="prepare">🔧 固める</button>
-            <button class="category-btn" data-category="create">✨ 生み出す</button>
-            <button class="category-btn" data-category="reflect">🔄 振り返る</button>
-            <button class="category-btn" data-category="protocols">🛡️ プロトコル</button>
-        </div>
+        <div class="categories" id="categories"></div>
 
         <div class="modules-grid" id="modules-grid">
-            <!-- モジュールカードがここに挿入される -->
+            <div class="loading">読み込み中...</div>
         </div>
     </div>
 
@@ -315,140 +345,142 @@
                 <h2 id="modal-title">モジュール名</h2>
                 <button class="modal-close" id="modal-close">&times;</button>
             </div>
-            <div class="modal-body" id="modal-body">
-                <!-- モジュール内容 -->
+            <div id="modal-meta" style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 1rem;"></div>
+            <div class="modal-body" id="modal-body"></div>
+            <div class="modal-actions">
+                <button class="btn btn-primary" id="copy-btn">📋 クリップボードにコピー</button>
+                <button class="btn btn-secondary" id="copy-path-btn">📁 パスをコピー</button>
             </div>
-            <button class="copy-btn" id="copy-btn">
-                📋 クリップボードにコピー
-            </button>
         </div>
     </div>
 
     <script>
-        // モジュールデータ（実際にはサーバーから取得）
-        const modules = [
-            // Find
-            { name: "🤯 脳内を吐き出す", category: "find", description: "頭の中にあることを全て書き出す" },
-            { name: "📥 情報を集める", category: "find", description: "必要な情報を収集する" },
-            { name: "👂 声を聞く", category: "find", description: "他者の意見を聴取する" },
-            { name: "🔄 頭を切り替える", category: "find", description: "思考モードを切り替える" },
-            { name: "🗺️ 全体を眺める", category: "find", description: "俯瞰的に状況を把握する" },
-            
-            // Expand
-            { name: "🔍 状況を把握する", category: "expand", description: "現状を正確に理解する" },
-            { name: "❓ 問題を特定する", category: "expand", description: "本当の問題を見つける" },
-            { name: "👥 関係者を整理する", category: "expand", description: "ステークホルダーを把握する" },
-            { name: "🤔 前提を疑う", category: "expand", description: "当たり前を疑問視する" },
-            { name: "💡 アイデアを出す", category: "expand", description: "可能性を広げる" },
-            { name: "🔗 点をつなぐ", category: "expand", description: "情報を関連付ける" },
-            { name: "🙃 逆転させる", category: "expand", description: "逆の視点で考える" },
-            { name: "🎲 揺らぎを与える", category: "expand", description: "ランダム性を導入する" },
-            { name: "💣 前提を破壊する", category: "expand", description: "制約を取り払う" },
-            
-            // Focus
-            { name: "⚖️ 選択肢を比較する", category: "focus", description: "オプションを評価する" },
-            { name: "✅ 決断を下す", category: "focus", description: "意思決定を行う" },
-            { name: "📋 計画を立てる", category: "focus", description: "アクションプランを作成する" },
-            { name: "⚠️ リスクを見積もる", category: "focus", description: "危険性を評価する" },
-            { name: "🔢 優先順位をつける", category: "focus", description: "重要度で並べ替える" },
-            { name: "🗑️ やめる決断をする", category: "focus", description: "撤退を決める" },
-            { name: "🔮 未来を分岐させる", category: "focus", description: "シナリオを描く" },
-            { name: "⛓️ ボトルネックを突く", category: "focus", description: "制約を特定する" },
-            { name: "🔪 本質だけ残す", category: "focus", description: "不要を削ぎ落とす" },
-            { name: "🚀 テコを見つける", category: "focus", description: "レバレッジポイントを探す" },
-            { name: "🛡️ 悪魔の代弁をする", category: "focus", description: "反論を想定する" },
-            
-            // Prepare
-            { name: "🙅 断る", category: "prepare", description: "Noと言う" },
-            { name: "🤝 任せる", category: "prepare", description: "委任する" },
-            { name: "🎭 演じる", category: "prepare", description: "ロールプレイする" },
-            { name: "🎮 クエスト化する", category: "prepare", description: "ゲーミフィケーション" },
-            { name: "🏟️ 環境をデザインする", category: "prepare", description: "場を設計する" },
-            
-            // Create
-            { name: "📝 文章を書く", category: "create", description: "テキストを作成する" },
-            { name: "🎤 プレゼンを作る", category: "create", description: "発表資料を作成する" },
-            { name: "🏗️ 仕組み化する", category: "create", description: "システムを構築する" },
-            { name: "🏷️ 名前をつける", category: "create", description: "命名する" },
-            { name: "📐 手順を組む", category: "create", description: "プロセスを設計する" },
-            { name: "🎨 図解する", category: "create", description: "ビジュアライズする" },
-            { name: "🧪 プロトタイプを作る", category: "create", description: "試作する" },
-            
-            // Reflect
-            { name: "✨ 品質を確かめる", category: "reflect", description: "出来栄えを評価する" },
-            { name: "🔧 改善案を出す", category: "reflect", description: "より良くする方法を考える" },
-            { name: "📖 経験を振り返る", category: "reflect", description: "学びを抽出する" },
-            { name: "💾 記録する", category: "reflect", description: "アーカイブする" },
-            { name: "🏛️ 賢人に聞く", category: "reflect", description: "知恵を借りる" },
-            
-            // Protocols
-            { name: "Module 01: DMZ Protocol", category: "protocols", description: "重要ファイルの保護" },
-            { name: "Module 04: TDD Protocol", category: "protocols", description: "テスト駆動開発の強制" },
-            { name: "Module 06: Complexity Budget", category: "protocols", description: "複雑度の予算管理" },
-            { name: "Module 11: Red Teaming", category: "protocols", description: "セキュリティ監査" },
-            { name: "Module 17: Structured Logging", category: "protocols", description: "構造化ログ" },
-            { name: "Module 25: Rollback Strategy", category: "protocols", description: "ロールバック戦略" },
-        ];
+        let indexData = null;
+        let currentCategory = 'all';
+        let currentModule = null;
 
         // DOM要素
         const grid = document.getElementById('modules-grid');
         const searchInput = document.getElementById('search');
-        const categoryBtns = document.querySelectorAll('.category-btn');
+        const categoriesContainer = document.getElementById('categories');
         const modal = document.getElementById('modal');
         const modalTitle = document.getElementById('modal-title');
+        const modalMeta = document.getElementById('modal-meta');
         const modalBody = document.getElementById('modal-body');
         const modalClose = document.getElementById('modal-close');
         const copyBtn = document.getElementById('copy-btn');
-        const statModules = document.getElementById('stat-modules');
+        const copyPathBtn = document.getElementById('copy-path-btn');
+        const notice = document.getElementById('notice');
 
-        let currentCategory = 'all';
-        let currentModule = null;
+        // index.jsonを読み込み
+        async function loadIndex() {
+            try {
+                const response = await fetch('index.json');
+                if (!response.ok) throw new Error('index.json not found');
+                indexData = await response.json();
 
-        // 統計更新
-        statModules.textContent = modules.length;
+                notice.innerHTML = `✅ <strong>データ読み込み完了</strong>: ${indexData.stats.totalModules}モジュール (${indexData.generated})`;
+                notice.style.borderLeftColor = 'var(--success)';
 
-        // モジュールカード生成
-        function renderModules(filter = '') {
-            grid.innerHTML = '';
-            
-            const filtered = modules.filter(m => {
+                updateStats();
+                renderCategories();
+                renderModules();
+            } catch (error) {
+                // ローカルファイルとして読み込めない場合のフォールバック
+                notice.innerHTML = `⚠️ <strong>注意</strong>: index.jsonの読み込みに失敗しました。<code>build-index.ps1</code>を実行後、HTTPサーバー経由でアクセスしてください。<br>
+                <small>$ python -m http.server 8000</small>`;
+                notice.style.borderLeftColor = 'var(--warning)';
+                grid.innerHTML = '<div class="loading">index.json を読み込めませんでした</div>';
+            }
+        }
+
+        function updateStats() {
+            document.getElementById('stat-modules').textContent = indexData.stats.totalModules;
+            document.getElementById('stat-categories').textContent = indexData.stats.categories;
+            document.getElementById('stat-phases').textContent = Object.keys(indexData.stats.phases).length;
+        }
+
+        function renderCategories() {
+            const cats = Object.entries(indexData.categories);
+
+            let html = '<button class="category-btn active" data-category="all">すべて</button>';
+            cats.forEach(([key, cat]) => {
+                html += `<button class="category-btn" data-category="${key}">${cat.emoji} ${cat.label.split(' ')[0]} (${cat.count})</button>`;
+            });
+
+            categoriesContainer.innerHTML = html;
+
+            // イベントリスナー
+            categoriesContainer.querySelectorAll('.category-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    categoriesContainer.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentCategory = btn.dataset.category;
+                    renderModules();
+                });
+            });
+        }
+
+        function renderModules() {
+            const filter = searchInput.value.toLowerCase();
+
+            const filtered = indexData.modules.filter(m => {
                 const matchCategory = currentCategory === 'all' || m.category === currentCategory;
-                const matchSearch = filter === '' || 
-                    m.name.toLowerCase().includes(filter.toLowerCase()) ||
-                    m.description.toLowerCase().includes(filter.toLowerCase());
+                const matchSearch = filter === '' ||
+                    m.name.toLowerCase().includes(filter) ||
+                    m.description.toLowerCase().includes(filter);
                 return matchCategory && matchSearch;
             });
 
-            filtered.forEach(module => {
-                const card = document.createElement('div');
-                card.className = 'module-card';
-                card.innerHTML = `
-                    <div class="category">${getCategoryLabel(module.category)}</div>
-                    <h3>${module.name}</h3>
-                    <p class="description">${module.description}</p>
+            if (filtered.length === 0) {
+                grid.innerHTML = '<div class="loading">該当するモジュールがありません</div>';
+                return;
+            }
+
+            grid.innerHTML = filtered.map(m => {
+                const cat = indexData.categories[m.category];
+                return `
+                    <div class="module-card" data-id="${m.id}">
+                        <div class="category">${cat?.emoji || ''} ${cat?.label || m.category}</div>
+                        <h3>${m.name}</h3>
+                        <p class="description">${m.description || '説明なし'}</p>
+                        <p class="meta">${m.metadata?.wordCount || 0} words | ${(m.size / 1024).toFixed(1)} KB</p>
+                    </div>
                 `;
-                card.addEventListener('click', () => openModal(module));
-                grid.appendChild(card);
+            }).join('');
+
+            grid.querySelectorAll('.module-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    const module = indexData.modules.find(m => m.id === card.dataset.id);
+                    if (module) openModal(module);
+                });
             });
         }
 
-        function getCategoryLabel(cat) {
-            const labels = {
-                find: '🔎 見つける',
-                expand: '📊 広げる',
-                focus: '🎯 絞る',
-                prepare: '🔧 固める',
-                create: '✨ 生み出す',
-                reflect: '🔄 振り返る',
-                protocols: '🛡️ プロトコル'
-            };
-            return labels[cat] || cat;
-        }
-
-        function openModal(module) {
+        async function openModal(module) {
             currentModule = module;
             modalTitle.textContent = module.name;
-            modalBody.textContent = `# ${module.name}\n\n${module.description}\n\n---\n\n[このモジュールの詳細内容を表示するには、\nCLIで以下のコマンドを実行してください]\n\n.\\forge.ps1 load "${module.name}"`;
+
+            const cat = indexData.categories[module.category];
+            modalMeta.innerHTML = `
+                <strong>カテゴリ:</strong> ${cat?.emoji || ''} ${cat?.label || module.category} |
+                <strong>フェーズ:</strong> ${module.phase} |
+                <strong>サイズ:</strong> ${(module.size / 1024).toFixed(1)} KB
+            `;
+
+            // ファイル内容を取得試行
+            try {
+                const response = await fetch(module.path.replace(/\\/g, '/'));
+                if (response.ok) {
+                    const content = await response.text();
+                    modalBody.textContent = content;
+                } else {
+                    throw new Error('Cannot fetch');
+                }
+            } catch {
+                modalBody.textContent = `# ${module.name}\n\n${module.description}\n\n---\n\n[ファイル内容を表示するには、HTTPサーバー経由でアクセスしてください]\n\nパス: ${module.path}\n\nCLIコマンド:\n.\\forge.ps1 load "${module.name}"`;
+            }
+
             modal.classList.add('active');
         }
 
@@ -458,36 +490,27 @@
         }
 
         // イベントリスナー
-        searchInput.addEventListener('input', (e) => {
-            renderModules(e.target.value);
-        });
-
-        categoryBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                categoryBtns.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                currentCategory = btn.dataset.category;
-                renderModules(searchInput.value);
-            });
-        });
-
+        searchInput.addEventListener('input', () => renderModules());
         modalClose.addEventListener('click', closeModal);
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) closeModal();
-        });
+        modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
 
         copyBtn.addEventListener('click', () => {
+            navigator.clipboard.writeText(modalBody.textContent);
+            copyBtn.textContent = '✅ コピーしました！';
+            setTimeout(() => { copyBtn.textContent = '📋 クリップボードにコピー'; }, 2000);
+        });
+
+        copyPathBtn.addEventListener('click', () => {
             if (currentModule) {
-                navigator.clipboard.writeText(modalBody.textContent);
-                copyBtn.textContent = '✅ コピーしました！';
-                setTimeout(() => {
-                    copyBtn.textContent = '📋 クリップボードにコピー';
-                }, 2000);
+                navigator.clipboard.writeText(currentModule.path);
+                copyPathBtn.textContent = '✅ コピーしました！';
+                setTimeout(() => { copyPathBtn.textContent = '📁 パスをコピー'; }, 2000);
             }
         });
 
-        // 初期レンダリング
-        renderModules();
+        // 初期化
+        loadIndex();
     </script>
 </body>
+
 </html>

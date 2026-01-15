@@ -14,10 +14,10 @@
 #>
 
 param(
-    [Parameter(Position=0)]
+    [Parameter(Position = 0)]
     [string]$Command = "help",
     
-    [Parameter(Position=1, ValueFromRemainingArguments=$true)]
+    [Parameter(Position = 1, ValueFromRemainingArguments = $true)]
     [string[]]$Arguments
 )
 
@@ -99,7 +99,8 @@ function Get-AllModules {
             try {
                 $cached = Get-Content $Script:IndexFile -Raw | ConvertFrom-Json -AsHashtable
                 if ($cached) { return $cached }
-            } catch {}
+            }
+            catch {}
         }
     }
     
@@ -112,7 +113,8 @@ function Get-AllModules {
     # キャッシュに保存
     try {
         $modules | ConvertTo-Json -Depth 5 | Set-Content $Script:IndexFile -Encoding UTF8
-    } catch {}
+    }
+    catch {}
     
     return $modules
 }
@@ -305,10 +307,13 @@ function Show-Help {
   
   preset [name]       プリセット一覧/コピー (Google AI Studio用)
                       例: .\forge.ps1 preset architect
+                      例: .\forge.ps1 preset custom -Modules "DMZ,TDD,Logging"
   
   tree                ディレクトリ構造を表示
   
   index               インデックスを再構築
+  
+  server              ローカルサーバーを起動
   
   help                このヘルプを表示
 
@@ -324,14 +329,15 @@ function Show-Help {
 }
 
 # ========================================
-# プリセット機能
+# プリセット機能 (動的生成対応)
 # ========================================
 function Show-Presets {
     $presetDir = Join-Path $Script:BaseDir "presets"
     
-    Write-Host "`n🎯 Forge - プリセット一覧`n" -ForegroundColor Cyan
-    Write-Host "Google AI Studio の System Instructions にコピーして使用できます。`n" -ForegroundColor DarkGray
+    Write-Host "`n🎯 Forge - プリセット機能`n" -ForegroundColor Cyan
+    Write-Host "Google AI Studio用のシステムプロンプトを生成します。`n" -ForegroundColor DarkGray
     
+    Write-Host "静的プリセット (推奨):" -ForegroundColor Yellow
     $presets = @{
         "architect"  = "設計・アーキテクチャ向け (Hypervisor + TDD + DMZ)"
         "coder"      = "コーディング支援向け (TDD + Logging + Security)"
@@ -340,30 +346,109 @@ function Show-Presets {
         "decision"   = "意思決定支援向け (決断 + リスク + 優先順位)"
         "brainstorm" = "アイデア出し向け (ブレスト + 逆転思考 + SCAMPER)"
     }
-    
     foreach ($key in $presets.Keys) {
-        Write-Host "  $key" -ForegroundColor Yellow -NoNewline
+        Write-Host "  $key" -ForegroundColor White -NoNewline
         Write-Host " - $($presets[$key])" -ForegroundColor Gray
     }
+
+    Write-Host "`n動的生成:" -ForegroundColor Yellow
+    Write-Host "  custom" -ForegroundColor White -NoNewline
+    Write-Host " - 任意のモジュールを組み合わせて生成" -ForegroundColor Gray
     
-    Write-Host "`n使い方: .\forge.ps1 preset <name>`n" -ForegroundColor DarkGray
+    Write-Host "`n使い方:" -ForegroundColor DarkGray
+    Write-Host "  .\forge.ps1 preset architect"
+    Write-Host "  .\forge.ps1 preset custom -Modules `"DMZ,TDD,Logging`""
+}
+
+function Build-Custom-Preset {
+    param([string]$ModuleParams)
+    
+    $keywords = $ModuleParams -split ","
+    $foundModules = @()
+    $modules = Get-AllModules
+    
+    Write-Host "`nカスタムプリセットを構築中..." -ForegroundColor Cyan
+    
+    foreach ($k in $keywords) {
+        $k = $k.Trim()
+        if ([string]::IsNullOrWhiteSpace($k)) { continue }
+        
+        # モジュール検索
+        $matchPath = $null
+        foreach ($cat in $modules.Keys) {
+            $targetPath = $modules[$cat] | Where-Object { 
+                $name = [System.IO.Path]::GetFileNameWithoutExtension($_)
+                $name -like "*$k*" 
+            } | Select-Object -First 1
+            if ($targetPath) { $matchPath = $targetPath; break }
+        }
+        
+        if ($matchPath) {
+            $fullPath = if ([System.IO.Path]::IsPathRooted($matchPath)) { $matchPath } else { Join-Path $Script:BaseDir $matchPath }
+            $foundModules += $fullPath
+            Write-Host "  [+] 追加: $([System.IO.Path]::GetFileNameWithoutExtension($fullPath))" -ForegroundColor Green
+        }
+        else {
+            Write-Host "  [!] 未発見: $k" -ForegroundColor Red
+        }
+    }
+    
+    if ($foundModules.Count -eq 0) {
+        Write-Host "モジュールが見つかりませんでした。" -ForegroundColor Red
+        return
+    }
+
+    # プリセット構築
+    $sb = [System.Text.StringBuilder]::new()
+    $sb.AppendLine("# Forge Custom Preset")
+    $sb.AppendLine("# Generated at $(Get-Date)")
+    $sb.AppendLine("")
+    $sb.AppendLine("<system_constitution version=`"custom`">")
+    $sb.AppendLine("    <module_registry>")
+    
+    foreach ($path in $foundModules) {
+        $content = Get-Content $path -Raw -Encoding UTF8
+        # XMLエスケープなどは簡易的
+        $name = [System.IO.Path]::GetFileNameWithoutExtension($path)
+        $sb.AppendLine("        <!-- Module: $name -->")
+        $sb.AppendLine("        <module name=`"$name`">")
+        $sb.AppendLine($content)
+        $sb.AppendLine("        </module>")
+    }
+    
+    $sb.AppendLine("    </module_registry>")
+    $sb.AppendLine("</system_constitution>")
+    
+    Set-Clipboard -Value $sb.ToString()
+    Write-Host "`n✅ カスタムプリセットをクリップボードにコピーしました！" -ForegroundColor Cyan
 }
 
 function Copy-Preset {
-    param([string]$PresetName)
+    param(
+        [string]$PresetName,
+        [string]$Modules = ""
+    )
+    
+    if ($PresetName.ToLower() -eq "custom") {
+        if (-not $Modules) {
+            Write-Host "エラー: -Modules パラメータが必要です (例: custom -Modules `"TDD,DMZ`")" -ForegroundColor Red
+            return
+        }
+        Build-Custom-Preset -ModuleParams $Modules
+        return
+    }
     
     $presetDir = Join-Path $Script:BaseDir "presets"
     $presetFile = Join-Path $presetDir "$PresetName.txt"
     
     if (-not (Test-Path $presetFile)) {
         Write-Host "エラー: プリセット '$PresetName' が見つかりません" -ForegroundColor Red
-        Write-Host "利用可能なプリセット: architect, coder, analyst, writer, decision, brainstorm" -ForegroundColor DarkGray
+        Show-Presets
         return
     }
     
     $content = Get-Content -Path $presetFile -Raw -Encoding UTF8
     Set-Clipboard -Value $content
-    
     Write-Host "`n✅ プリセット '$PresetName' をクリップボードにコピーしました！" -ForegroundColor Green
     Write-Host "`n次のステップ:" -ForegroundColor Yellow
     Write-Host "  1. Google AI Studio を開く" -ForegroundColor Gray
@@ -376,41 +461,44 @@ function Copy-Preset {
 # メイン処理
 # ========================================
 switch ($Command.ToLower()) {
-    "start" {
-        Start-Interactive
-    }
-    "list" {
-        Show-List -Category ($Arguments -join " ")
-    }
+    "start" { Start-Interactive }
+    "list" { Show-List -Category ($Arguments -join " ") }
     "load" {
-        if (-not $Arguments) {
-            Write-Host "エラー: モジュール名を指定してください" -ForegroundColor Red
-            return
-        }
+        if (-not $Arguments) { Write-Host "エラー: モジュール名を指定してください" -ForegroundColor Red; return }
         Show-Module -ModuleName ($Arguments -join " ")
     }
     "search" {
-        if (-not $Arguments) {
-            Write-Host "エラー: 検索キーワードを指定してください" -ForegroundColor Red
-            return
-        }
+        if (-not $Arguments) { Write-Host "エラー: 検索キーワードを指定してください" -ForegroundColor Red; return }
         Search-Modules -Keyword ($Arguments -join " ")
     }
     "preset" {
-        if (-not $Arguments) {
+        # 引数解析
+        $pName = $null
+        $modules = $null
+        
+        for ($i = 0; $i -lt $Arguments.Count; $i++) {
+            if ($Arguments[$i] -eq "-Modules") {
+                $modules = $Arguments[$i + 1]
+                $i++
+            }
+            elseif (-not $pName) {
+                $pName = $Arguments[$i]
+            }
+        }
+        
+        if (-not $pName) {
             Show-Presets
-        } else {
-            Copy-Preset -PresetName ($Arguments[0])
+        }
+        else {
+            Copy-Preset -PresetName $pName -Modules $modules
         }
     }
-    "tree" {
-        Show-Tree
-    }
-    "index" {
+    "tree" { Show-Tree }
+    "index" { 
         Update-Index
     }
-    default {
-        Show-Help
+    "server" {
+        & "$Script:BaseDir\start-server.ps1"
     }
+    default { Show-Help }
 }
-
