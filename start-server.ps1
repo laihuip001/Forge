@@ -62,7 +62,18 @@ while ($Listener.IsListening) {
     
     Write-Host "[Request] $UrlPath" -ForegroundColor DarkGray
 
-    if (Test-Path $FilePath -PathType Leaf) {
+    # パストラバーサル対策: パスを正規化してルートディレクトリ内にあるか確認
+    $NormalizedPath = [System.IO.Path]::GetFullPath($FilePath)
+    if (-not $NormalizedPath.StartsWith($Root)) {
+        $StatusCode = 403
+        $ErrorMsg = [System.Text.Encoding]::UTF8.GetBytes("403 Forbidden: Invalid Path")
+        $Response.OutputStream.Write($ErrorMsg, 0, $ErrorMsg.Length)
+        $Response.StatusCode = $StatusCode
+        $Response.Close()
+        continue
+    }
+
+    if (Test-Path $NormalizedPath -PathType Leaf) {
         $Extension = [System.IO.Path]::GetExtension($FilePath).ToLower()
         if ($MimeTypes.ContainsKey($Extension)) {
             $ContentType = $MimeTypes[$Extension]

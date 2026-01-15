@@ -437,13 +437,23 @@
                 return;
             }
 
+            // XSS対策
+            const escapeHtml = (unsafe) => {
+                return unsafe
+                     .replace(/&/g, "&amp;")
+                     .replace(/</g, "&lt;")
+                     .replace(/>/g, "&gt;")
+                     .replace(/"/g, "&quot;")
+                     .replace(/'/g, "&#039;");
+            }
+
             grid.innerHTML = filtered.map(m => {
                 const cat = indexData.categories[m.category];
                 return `
                     <div class="module-card" data-id="${m.id}">
-                        <div class="category">${cat?.emoji || ''} ${cat?.label || m.category}</div>
-                        <h3>${m.name}</h3>
-                        <p class="description">${m.description || '説明なし'}</p>
+                        <div class="category">${cat?.emoji || ''} ${escapeHtml(cat?.label || m.category)}</div>
+                        <h3>${escapeHtml(m.name)}</h3>
+                        <p class="description">${escapeHtml(m.description || '説明なし')}</p>
                         <p class="meta">${m.metadata?.wordCount || 0} words | ${(m.size / 1024).toFixed(1)} KB</p>
                     </div>
                 `;

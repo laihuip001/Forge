@@ -22,7 +22,7 @@ param(
 )
 
 $Script:BaseDir = $PSScriptRoot
-$Script:IndexFile = Join-Path $BaseDir ".forge-index.json"
+$Script:IndexFile = Join-Path $BaseDir "index.json"
 
 # ディレクトリマッピング
 $Script:Directories = @{
@@ -54,16 +54,16 @@ $Script:CategoryNames = @{
 # セキュリティ: 入力検証
 # ========================================
 function Test-SafeInput {
-    param([string]$Input)
+    param([string]$UserInput)
     
     # パストラバーサル攻撃を防止
-    if ($Input -match '\.\.[\\/]') {
+    if ($UserInput -match '\\.\\.[\\\\/]') {
         Write-Host "⚠️ セキュリティ警告: 無効な入力です" -ForegroundColor Red
         return $false
     }
     
     # 危険な文字を検出
-    if ($Input -match '[<>|&;`$]') {
+    if ($UserInput -match '[<>|&;`$]') {
         Write-Host "⚠️ セキュリティ警告: 無効な文字が含まれています" -ForegroundColor Red
         return $false
     }
@@ -72,58 +72,42 @@ function Test-SafeInput {
 }
 
 # ========================================
-# パフォーマンス: インデックスキャッシュ
+# パフォーマンス: インデックスキャッシュ (index.json利用)
 # ========================================
-function Get-ModulesInDirectory {
-    param([string]$DirPath)
-    
-    if (-not (Test-Path $DirPath)) {
-        return @()
-    }
-    
-    Get-ChildItem -Path $DirPath -Filter "*.md" | ForEach-Object {
-        @{
-            Name = $_.BaseName
-            Path = $_.FullName
-        }
-    }
-}
-
 function Get-AllModules {
     param([switch]$ForceRefresh)
     
-    # キャッシュをチェック
     if (-not $ForceRefresh -and (Test-Path $Script:IndexFile)) {
-        $cacheAge = (Get-Date) - (Get-Item $Script:IndexFile).LastWriteTime
-        if ($cacheAge.TotalMinutes -lt 60) {
-            try {
-                $cached = Get-Content $Script:IndexFile -Raw | ConvertFrom-Json -AsHashtable
-                if ($cached) { return $cached }
+        try {
+            $json = Get-Content $Script:IndexFile -Raw -Encoding UTF8 | ConvertFrom-Json
+            # index.jsonの構造 (modules配列) をハッシュテーブル形式に変換
+            $modules = @{}
+            foreach ($m in $json.modules) {
+                if (-not $modules[$m.category]) { $modules[$m.category] = @() }
+                $modules[$m.category] += $m.path
             }
-            catch {}
+            return $modules
         }
+        catch {}
     }
     
-    # 新規取得
-    $modules = @{}
-    foreach ($key in $Script:Directories.Keys) {
-        $modules[$key] = @(Get-ModulesInDirectory $Script:Directories[$key])
+    # フォールバック: ディレクトリから生成
+    Write-Host "⚠️ index.jsonが見つかりません。再生成します..." -ForegroundColor Yellow
+    & "$Script:BaseDir\build-index.ps1" | Out-Null
+    return Get-AllModules
+}
+
+function Get-ModulesInDirectory {
+    param([string]$Path)
+    if (Test-Path $Path) {
+        return Get-ChildItem -Path $Path -Filter "*.md" | Select-Object -ExpandProperty FullName
     }
-    
-    # キャッシュに保存
-    try {
-        $modules | ConvertTo-Json -Depth 5 | Set-Content $Script:IndexFile -Encoding UTF8
-    }
-    catch {}
-    
-    return $modules
+    return @()
 }
 
 function Update-Index {
     Write-Host "🔄 インデックスを更新中..." -ForegroundColor Cyan
-    $modules = Get-AllModules -ForceRefresh
-    $total = ($modules.Values | ForEach-Object { $_.Count } | Measure-Object -Sum).Sum
-    Write-Host "✅ $total モジュールをインデックス化しました" -ForegroundColor Green
+    & "$Script:BaseDir\build-index.ps1"
 }
 
 # ========================================
@@ -141,8 +125,10 @@ function Show-List {
         if ($modules[$cat].Count -eq 0) { continue }
         
         Write-Host "$($Script:CategoryNames[$cat]) ($($modules[$cat].Count))" -ForegroundColor Yellow
+        
         foreach ($mod in $modules[$cat]) {
-            Write-Host "  • $($mod.Name)" -ForegroundColor Gray
+            $name = [System.IO.Path]::GetFileNameWithoutExtension($mod)
+            Write-Host "  - $name" -ForegroundColor White
         }
         Write-Host ""
     }
@@ -151,84 +137,83 @@ function Show-List {
 function Show-Module {
     param([string]$ModuleName)
     
-    # セキュリティチェック
     if (-not (Test-SafeInput $ModuleName)) { return }
     
     $modules = Get-AllModules
+    $target = $null
     
     foreach ($cat in $modules.Keys) {
-        $found = $modules[$cat] | Where-Object { $_.Name -like "*$ModuleName*" } | Select-Object -First 1
+        $found = $modules[$cat] | Where-Object { 
+            ([System.IO.Path]::GetFileNameWithoutExtension($_)) -eq $ModuleName 
+        } | Select-Object -First 1
+        
         if ($found) {
-            Write-Host "`n📄 $($found.Name)" -ForegroundColor Green
-            Write-Host "カテゴリ: $($Script:CategoryNames[$cat])" -ForegroundColor DarkGray
-            Write-Host ("─" * 60) -ForegroundColor DarkGray
-            Write-Host ""
-            Get-Content -Path $found.Path -Encoding UTF8
-            return
+            $target = $found
+            break
         }
     }
     
-    Write-Host "エラー: モジュール `"$ModuleName`" が見つかりません" -ForegroundColor Red
+    if ($target) {
+        # 完全パスを復元（index.json由来の場合は相対パスの可能性あり）
+        $fullPath = $target
+        if (-not [System.IO.Path]::IsPathRooted($target)) {
+            $fullPath = Join-Path $Script:BaseDir $target
+        }
+        
+        Write-Host "`n📁 モジュール: $ModuleName" -ForegroundColor Cyan
+        Write-Host "📍 パス: $fullPath`n" -ForegroundColor DarkGray
+        
+        $content = Get-Content -Path $fullPath -Raw -Encoding UTF8
+        Write-Host $content -ForegroundColor White
+    }
+    else {
+        Write-Host "エラー: モジュール '$ModuleName' が見つかりません" -ForegroundColor Red
+        Write-Host "ヒント: 'forge list' で一覧を確認するか、'forge search' で検索してください" -ForegroundColor Gray
+    }
 }
 
 function Search-Modules {
     param([string]$Keyword)
     
-    # セキュリティチェック
     if (-not (Test-SafeInput $Keyword)) { return }
     
     $modules = Get-AllModules
-    $results = @()
+    $hits = 0
+    
+    Write-Host "`n🔍 検索結果: '$Keyword'`n" -ForegroundColor Cyan
     
     foreach ($cat in $modules.Keys) {
         foreach ($mod in $modules[$cat]) {
-            if ($mod.Name -like "*$Keyword*") {
-                $results += @{ Module = $mod; Category = $cat }
+            $name = [System.IO.Path]::GetFileNameWithoutExtension($mod)
+            $fullPath = if ([System.IO.Path]::IsPathRooted($mod)) { $mod } else { Join-Path $Script:BaseDir $mod }
+            
+            # ファイル名検索
+            if ($name -match "(?i)$Keyword") {
+                Write-Host "  [$($Script:CategoryNames[$cat])] $name" -ForegroundColor Yellow
+                $hits++
                 continue
             }
             
-            $content = Get-Content -Path $mod.Path -Encoding UTF8 -Raw -ErrorAction SilentlyContinue
-            if ($content -and $content -like "*$Keyword*") {
-                $results += @{ Module = $mod; Category = $cat }
+            # コンテンツ検索 (簡易)
+            $content = Get-Content -Path $fullPath -Raw -Encoding UTF8 -ErrorAction SilentlyContinue
+            if ($content -match "(?i)$Keyword") {
+                Write-Host "  [$($Script:CategoryNames[$cat])] $name (内容にヒット)" -ForegroundColor Gray
+                $hits++
             }
         }
     }
     
-    Write-Host "`n🔍 検索結果: `"$Keyword`"" -ForegroundColor Cyan
-    Write-Host "$($results.Count) 件見つかりました`n" -ForegroundColor DarkGray
-    
-    foreach ($r in $results) {
-        Write-Host "  $($Script:CategoryNames[$r.Category])" -ForegroundColor Yellow
-        Write-Host "    • $($r.Module.Name)" -ForegroundColor Gray
+    if ($hits -eq 0) {
+        Write-Host "  見つかりませんでした。" -ForegroundColor DarkGray
+    }
+    else {
+        Write-Host "`n  計 $hits 件が見つかりました" -ForegroundColor Green
     }
 }
 
 function Show-Tree {
-    $modules = Get-AllModules
-    
-    Write-Host "`n🔥 Forge - ディレクトリ構造`n" -ForegroundColor Cyan
-    
-    $tree = @"
-Forge/
-├── 📄 README.md
-├── 📄 The Cognitive Hypervisor Architecture.md
-│
-├── modules/
-│   ├── find/                  ($($modules['find'].Count) files)
-│   ├── think/
-│   │   ├── expand/            ($($modules['expand'].Count) files)
-│   │   └── focus/             ($($modules['focus'].Count) files)
-│   ├── act/
-│   │   ├── prepare/           ($($modules['prepare'].Count) files)
-│   │   └── create/            ($($modules['create'].Count) files)
-│   └── reflect/               ($($modules['reflect'].Count) files)
-│
-├── protocols/                 ($($modules['protocols'].Count) files)
-├── knowledge/                 ($($modules['knowledge'].Count) files)
-└── helpers/                   ($($modules['helpers'].Count) files)
-"@
-    
-    Write-Host $tree
+    Write-Host "`n🌳 ディレクトリ構造`n" -ForegroundColor Cyan
+    tree $BaseDir /F | Select-Object -last 100
 }
 
 # ========================================
@@ -236,68 +221,25 @@ Forge/
 # ========================================
 function Start-Interactive {
     Clear-Host
-    Write-Host @"
+    $msg = @"
+========================================
+🔥 Forge - 認知ハイパーバイザー
+========================================
 
-🔥 Forge - 認知ハイパーバイザー・プロンプトシステム
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ようこそ、設計者(Architect)。
+これはあなたの思考を拡張・整理・出力するための
+「プロンプトエンジニアリング支援システム」です。
 
-"@ -ForegroundColor Cyan
+[できること]
+  1. 🔎 見つける  (Find)    - 脳内整理、情報収集
+  2. 🧠 考える    (Think)   - 問題分析、意思決定、アイデア出し
+  3. ⚡ 働きかける (Act)     - スライド作成、文章執筆、設計
+  4. 🔄 振り返る  (Reflect) - 品質チェック、KPT
+  5. 🛡️ プロトコル (Rules)   - 開発ルール、DMZ、TDD
 
-    Write-Host "ようこそ！Forgeはあなたの思考を拡張するAIプロンプトシステムです。" -ForegroundColor White
-    Write-Host ""
-    
-    Write-Host "📌 クイックスタート" -ForegroundColor Yellow
-    Write-Host "  思考プロセスを始めるには、以下のモジュールがおすすめです:"
-    Write-Host ""
-    
-    $quickStart = @(
-        @{ Num = "1"; Name = "🤯 脳内を吐き出す"; Desc = "頭の中を整理する" }
-        @{ Num = "2"; Name = "❓ 問題を特定する"; Desc = "課題を明確にする" }
-        @{ Num = "3"; Name = "✅ 決断を下す"; Desc = "意思決定をサポート" }
-        @{ Num = "4"; Name = "📋 計画を立てる"; Desc = "アクションプランを作成" }
-    )
-    
-    foreach ($item in $quickStart) {
-        Write-Host "  [$($item.Num)] $($item.Name)" -ForegroundColor Green -NoNewline
-        Write-Host " - $($item.Desc)" -ForegroundColor Gray
-    }
-    
-    Write-Host ""
-    Write-Host "  [L] モジュール一覧を見る" -ForegroundColor Cyan
-    Write-Host "  [T] ディレクトリ構造を表示" -ForegroundColor Cyan
-    Write-Host "  [Q] 終了" -ForegroundColor DarkGray
-    Write-Host ""
-    
-    $choice = Read-Host "選択してください (1-4, L, T, Q)"
-    
-    switch ($choice.ToUpper()) {
-        "1" { Show-Module -ModuleName "脳内を吐き出す" }
-        "2" { Show-Module -ModuleName "問題を特定する" }
-        "3" { Show-Module -ModuleName "決断を下す" }
-        "4" { Show-Module -ModuleName "計画を立てる" }
-        "L" { Show-List }
-        "T" { Show-Tree }
-        "Q" { Write-Host "`n👋 またお会いしましょう！`n" -ForegroundColor Cyan; return }
-        default { 
-            Write-Host "`n⚠️ 無効な選択です" -ForegroundColor Yellow
-            Start-Interactive
-        }
-    }
-}
-
-function Show-Help {
-    Write-Host @"
-
-🔥 Forge CLI - 認知ハイパーバイザー・プロンプトシステム
-
-使用方法:
-  .\forge.ps1 <command> [options]
-
-コマンド:
-  start               インタラクティブモードを開始 (初心者向け)
-  
-  list [category]     モジュール一覧を表示
-                      カテゴリ: find, expand, focus, prepare, create, reflect, protocols, knowledge, helpers
+[使い方]
+  list <category>     モジュール一覧を表示
+                      例: .\forge.ps1 list think
   
   load <module>       モジュールを読み込み表示
                       例: .\forge.ps1 load "決断を下す"
@@ -325,11 +267,12 @@ function Show-Help {
   .\forge.ps1 search "推論"
   .\forge.ps1 preset architect   # プリセットをクリップボードにコピー
 
-"@ -ForegroundColor White
+"@
+    Write-Host $msg -ForegroundColor White
 }
 
 # ========================================
-# プリセット機能 (動的生成対応)
+# プリセット機能
 # ========================================
 function Show-Presets {
     $presetDir = Join-Path $Script:BaseDir "presets"
@@ -346,11 +289,12 @@ function Show-Presets {
         "decision"   = "意思決定支援向け (決断 + リスク + 優先順位)"
         "brainstorm" = "アイデア出し向け (ブレスト + 逆転思考 + SCAMPER)"
     }
+    
     foreach ($key in $presets.Keys) {
         Write-Host "  $key" -ForegroundColor White -NoNewline
         Write-Host " - $($presets[$key])" -ForegroundColor Gray
     }
-
+    
     Write-Host "`n動的生成:" -ForegroundColor Yellow
     Write-Host "  custom" -ForegroundColor White -NoNewline
     Write-Host " - 任意のモジュールを組み合わせて生成" -ForegroundColor Gray
@@ -377,8 +321,10 @@ function Build-Custom-Preset {
         $matchPath = $null
         foreach ($cat in $modules.Keys) {
             $targetPath = $modules[$cat] | Where-Object { 
-                $name = [System.IO.Path]::GetFileNameWithoutExtension($_)
-                $name -like "*$k*" 
+                $path = $_
+                $name = [System.IO.Path]::GetFileNameWithoutExtension($path)
+                # エスケープして正規表現マッチ、またはLike演算子
+                $name -like "*$k*"
             } | Select-Object -First 1
             if ($targetPath) { $matchPath = $targetPath; break }
         }
@@ -464,11 +410,17 @@ switch ($Command.ToLower()) {
     "start" { Start-Interactive }
     "list" { Show-List -Category ($Arguments -join " ") }
     "load" {
-        if (-not $Arguments) { Write-Host "エラー: モジュール名を指定してください" -ForegroundColor Red; return }
+        if (-not $Arguments) {
+            Write-Host "エラー: モジュール名を指定してください" -ForegroundColor Red
+            return
+        }
         Show-Module -ModuleName ($Arguments -join " ")
     }
     "search" {
-        if (-not $Arguments) { Write-Host "エラー: 検索キーワードを指定してください" -ForegroundColor Red; return }
+        if (-not $Arguments) {
+            Write-Host "エラー: 検索キーワードを指定してください" -ForegroundColor Red
+            return
+        }
         Search-Modules -Keyword ($Arguments -join " ")
     }
     "preset" {
