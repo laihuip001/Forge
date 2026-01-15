@@ -41,3 +41,12 @@
 *   `c:\Users\user\.gemini\Forge\` : プロジェクトルート
 *   `USER_MANUAL.md` : 機能詳細
 *   `AUDIT_REPORT.md` : 既知の課題
+*   `PLAN_OBSIDIAN_PIVOT.md` : **【最新】** 設計再調整計画（Obsidian回帰・Web UI廃止）
+
+---
+
+## 🚀 次のアクション (Next Steps)
+
+Web UI廃止を含む「原点回帰」計画が承認されました。
+詳細は `PLAN_OBSIDIAN_PIVOT.md` を参照し、実装（Web UI削除、ディレクトリ整理）を進めてください。
+
