@@ -26,12 +26,12 @@ $Script:IndexFile = Join-Path $BaseDir "index.json"
 
 # ディレクトリマッピング
 $Script:Directories = @{
-    "find"      = Join-Path $BaseDir "modules\find"
-    "expand"    = Join-Path $BaseDir "modules\think\expand"
-    "focus"     = Join-Path $BaseDir "modules\think\focus"
-    "prepare"   = Join-Path $BaseDir "modules\act\prepare"
-    "create"    = Join-Path $BaseDir "modules\act\create"
-    "reflect"   = Join-Path $BaseDir "modules\reflect"
+    "find"      = Join-Path $BaseDir "modules\🔎 見つける"
+    "expand"    = Join-Path $BaseDir "modules\🧠 考える\📊 広げる"
+    "focus"     = Join-Path $BaseDir "modules\🧠 考える\🎯 絞る"
+    "prepare"   = Join-Path $BaseDir "modules\⚡ 動く\🔧 固める"
+    "create"    = Join-Path $BaseDir "modules\⚡ 動く\✨ 生み出す"
+    "reflect"   = Join-Path $BaseDir "modules\🔄 振り返る"
     "protocols" = Join-Path $BaseDir "protocols"
     "knowledge" = Join-Path $BaseDir "knowledge"
     "helpers"   = Join-Path $BaseDir "helpers"
