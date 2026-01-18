@@ -1,0 +1,64 @@
+---
+source_url: https://ai-data-base.com/archives/61858
+captured_at: 2026-01-18T13:33:15.863Z
+title: "JPモルガンの研究者らは、企業のドキュメントをLLMで読み込むモデル『DocLLM』を発表しました。 - AIDB"
+category: "unknown"
+is_premium: false
+publish_date: 2024-01-07T14:08:20+09:00
+conversion_method: Readability+Turndown
+file_hash: 0f41b28445b8a996
+---
+
+JPモルガンの研究者らは、企業のドキュメントをLLMで読み込むモデル『DocLLM』を発表しました。
+
+テキストや画像の情報だけでなくレイアウトが重要な資料に対しても有効とのことです。
+
+“DocLLM: A layout-aware generative language model for multimodal document understanding”
+
+※JPモルガンとは：資産管理や証券を取り扱う金融サービスの会社
+
+![](https://ai-data-base.com/wp-content/uploads/2024/01/AIDB_news_20230107-733x1024.jpg)
+
+※本記事は[AIDBのXポスト](https://twitter.com/ai_database/status/1743133087272464525)を転載したものです。
+
+※研究の概要を手早く把握するためのカジュアルな紹介記事です。
+
+## 関連研究
+
+[GoogleがLLMで「非構造化文書」高精度テキスト抽出するOCR『LMDX』発表。Bardを強化する可能性](https://ai-data-base.com/archives/55759)
+
+[数式や文章がぐにゃぐにゃに曲がった論文PDFでもくっきり認識する画期的なOCR『Nougat』](https://ai-data-base.com/archives/54869)
+
+[Gemini Pro 対 GPT-4V、画像認識能力でどちらが優秀なのか](https://ai-data-base.com/archives/61286)
+
+[画像分析機能を持つオープンソースLLM『LLaVA-1.5』登場。手持ちの画像を分析可能。GPT-4Vとの違い](https://ai-data-base.com/archives/56440)
+
+## 企業ドキュメントについて
+
+*   空間的配置も意味を持つ
+*   申込書、請求書、領収書など
+*   従来のLLMは読み込みが苦手とされている
+
+*   レイアウトの意味も考える
+*   バウンディングボックスを使用  
+    （エンコーダーではなく）
+*   特殊な事前学習を実施
+
+## 実験と結果
+
+*   さまざまな形式の文書でテストした
+*   正解率やF1スコアで測定した
+*   テキストだけよりも優れた理解を示した
+*   複雑なレイアウトの文書でも効果的だった
+
+なお、コンポーネントの一つであるOCR（光学文字認識）は別の技術であることに注意が必要です。  
+そのため、精度向上にあたっては最適なOCRエンジンの選択も課題の一つとのことです。
+
+## 参照情報
+
+DocLLM: A layout-aware generative language model for multimodal document understanding  
+[https://arxiv.org/abs/2401.00908](https://arxiv.org/abs/2401.00908)  
+著者：Dongsheng Wang, Natraj Raman, Mathieu Sibue, Zhiqiang Ma, Petr Babkin, Simerjot Kaur, Yulong Pei, Armineh Nourbakhsh, Xiaomo Liu  
+機関：JPMorgan AI Research
+
+Copyright © Parks, Inc. All rights reserved.

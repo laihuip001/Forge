@@ -17,3 +17,10 @@ tests/test-results/
 
 # Antigravity session data (embedded repos, browser recordings)
 .gemini/antigravity*/
+
+# Forge System Ignores
+node_modules/
+temp_*.json
+temp_*.md
+.obsidian/
+log.txt
